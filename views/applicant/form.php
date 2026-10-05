@@ -136,15 +136,40 @@ $fieldLimits = static function ($field) {
                                 <span class="existing <?= $doc->verification_status==='invalid'?'invalid':'' ?>"> <?= $doc->verification_status==='invalid'?'!':'✓' ?> <?= Html::encode($doc->original_name ?: 'dokumen') ?><?= $doc->verification_note ? ' — '.Html::encode($doc->verification_note) : '' ?></span>
                             <?php endforeach; ?>
                         </div>
-                        <div class="application-file-control">
                         <?php if ($field->field_type==='multi_file'): ?>
-                            <input class="application-file-input" type="file" name="upload_<?= (int)$field->id ?>[]" accept=".jpg,.jpeg,.png,.pdf" multiple data-max-size="<?= (int)$maxUploadBytes ?>" data-max-files="<?= (int)$maxFiles ?>">
+                            <div class="application-multifile-grid">
+                                <?php for ($slot = 1; $slot <= $maxFiles; $slot++): ?>
+                                    <div class="application-multifile-slot">
+                                        <div class="application-multifile-slot__label">
+                                            Bukti grup <?= $slot ?>
+                                            <?php if ($slot <= $minFiles): ?>
+                                                <span class="application-multifile-required">*</span>
+                                            <?php else: ?>
+                                                <span class="application-multifile-optional">opsional</span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="application-file-control">
+                                            <input
+                                                class="application-file-input"
+                                                type="file"
+                                                name="upload_<?= (int)$field->id ?>[]"
+                                                accept=".jpg,.jpeg,.png,.pdf"
+                                                data-max-size="<?= (int)$maxUploadBytes ?>"
+                                                data-max-files="1"
+                                            >
+                                            <div class="application-file-status" aria-live="polite">Belum ada file dipilih.</div>
+                                            <div class="application-file-error" aria-live="assertive" hidden></div>
+                                        </div>
+                                    </div>
+                                <?php endfor; ?>
+                            </div>
                         <?php else: ?>
-                            <input class="application-file-input" type="file" name="upload_<?= (int)$field->id ?>" accept=".jpg,.jpeg,.png,.pdf" data-max-size="<?= (int)$maxUploadBytes ?>" data-max-files="1">
+                            <div class="application-file-control">
+                                <input class="application-file-input" type="file" name="upload_<?= (int)$field->id ?>" accept=".jpg,.jpeg,.png,.pdf" data-max-size="<?= (int)$maxUploadBytes ?>" data-max-files="1">
+                                <div class="application-file-status" aria-live="polite">Belum ada file dipilih.</div>
+                                <div class="application-file-error" aria-live="assertive" hidden></div>
+                            </div>
                         <?php endif; ?>
-                            <div class="application-file-status" aria-live="polite">Belum ada file dipilih.</div>
-                            <div class="application-file-error" aria-live="assertive" hidden></div>
-                        </div>
                     </div>
                 <?php endforeach; ?>
                 <div class="application-form-actions">
@@ -282,9 +307,37 @@ $this->registerCss(<<<'CSS'
     font-weight:800;
     line-height:1.45;
 }
+.launch-form-v3 .application-multifile-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    width:100%;
+}
+.launch-form-v3 .application-multifile-slot{
+    padding:11px;
+    border:1px solid #e1e9e3;
+    border-radius:12px;
+    background:#fcfdfc;
+}
+.launch-form-v3 .application-multifile-slot__label{
+    margin-bottom:7px;
+    color:#24372c;
+    font-size:10px;
+    font-weight:900;
+}
+.launch-form-v3 .application-multifile-required{
+    color:#d4563f;
+}
+.launch-form-v3 .application-multifile-optional{
+    margin-left:5px;
+    color:#8a978f;
+    font-size:8px;
+    font-weight:700;
+}
 @media(max-width:720px){
     .launch-form-v3 .application-form-options{grid-template-columns:1fr}
     .launch-form-v3 .application-form-option{min-height:58px}
+    .launch-form-v3 .application-multifile-grid{grid-template-columns:1fr}
 }
 CSS);
 
