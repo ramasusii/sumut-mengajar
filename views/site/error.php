@@ -1,0 +1,1 @@
+<?php use yii\helpers\Html; $this->title='Terjadi Kesalahan'; ?><section class="page-hero"><div class="container"><h1>Ups, ada yang belum beres.</h1><p><?= Html::encode($exception ? $exception->getMessage() : 'Terjadi kesalahan pada aplikasi.') ?></p></div></section>

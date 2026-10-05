@@ -1,0 +1,415 @@
+
+/* ============================================================
+   SUMUT MENGAJAR - TRACKING V3
+   File terpisah agar tidak tertahan cache portal-v2.css lama.
+   ============================================================ */
+
+.portal-v2 .tracking-page{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:20px !important;
+    width:100% !important;
+}
+
+.portal-v2 .tracking-head{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) 360px !important;
+    gap:24px !important;
+    align-items:end !important;
+}
+
+.portal-v2 .tracking-back{
+    display:inline-flex !important;
+    margin-bottom:16px !important;
+    color:#65756c !important;
+    text-decoration:none !important;
+    font-size:12px !important;
+    font-weight:800 !important;
+}
+
+.portal-v2 .tracking-back:hover{
+    color:#0e623a !important;
+}
+
+.portal-v2 .tracking-code{
+    display:block !important;
+    margin-bottom:8px !important;
+    color:#16824a !important;
+    font-size:11px !important;
+    font-weight:900 !important;
+    letter-spacing:1.2px !important;
+}
+
+.portal-v2 .tracking-head h1{
+    margin:0 0 9px !important;
+    font-size:36px !important;
+    line-height:1.14 !important;
+    letter-spacing:-1.3px !important;
+    color:#17251e !important;
+}
+
+.portal-v2 .tracking-head>div:first-child>p{
+    margin:0 !important;
+    max-width:760px !important;
+    color:#6f7d75 !important;
+    font-size:13px !important;
+    line-height:1.65 !important;
+}
+
+.portal-v2 .tracking-status-card{
+    display:block !important;
+    background:#fff !important;
+    border:1px solid #e0e7e2 !important;
+    border-radius:20px !important;
+    padding:20px !important;
+    box-shadow:0 12px 30px rgba(25,60,44,.05) !important;
+}
+
+.portal-v2 .tracking-status-card small{
+    display:block !important;
+    margin-bottom:8px !important;
+    color:#859289 !important;
+    font-size:9px !important;
+    font-weight:900 !important;
+    letter-spacing:1.2px !important;
+}
+
+.portal-v2 .tracking-status-card strong{
+    display:block !important;
+    margin-bottom:7px !important;
+    font-size:21px !important;
+    line-height:1.25 !important;
+}
+
+.portal-v2 .tracking-status-card p{
+    margin:0 !important;
+    color:#6e7c74 !important;
+    font-size:12px !important;
+    line-height:1.55 !important;
+}
+
+.portal-v2 .tracking-status-card.success{
+    background:#f1faf4 !important;
+    border-color:#cfe7d6 !important;
+}
+.portal-v2 .tracking-status-card.success strong{color:#126d3d !important}
+
+.portal-v2 .tracking-status-card.progress{
+    background:#fff9ec !important;
+    border-color:#efdfbd !important;
+}
+.portal-v2 .tracking-status-card.progress strong{color:#986311 !important}
+
+.portal-v2 .tracking-status-card.danger{
+    background:#fff5f4 !important;
+    border-color:#efd6d2 !important;
+}
+.portal-v2 .tracking-status-card.danger strong{color:#a1453e !important}
+
+.portal-v2 .tracking-panel{
+    display:block !important;
+    width:100% !important;
+    background:#fff !important;
+    border:1px solid #e0e7e2 !important;
+    border-radius:22px !important;
+    padding:26px !important;
+    box-shadow:0 10px 30px rgba(25,60,44,.03) !important;
+}
+
+.portal-v2 .tracking-panel-head{
+    display:flex !important;
+    justify-content:space-between !important;
+    align-items:end !important;
+    gap:20px !important;
+    margin-bottom:24px !important;
+}
+
+.portal-v2 .tracking-panel-head span,
+.portal-v2 .tracking-info-card>span,
+.portal-v2 .tracking-next span,
+.portal-v2 .tracking-result span{
+    color:#16824a !important;
+    font-size:9px !important;
+    font-weight:900 !important;
+    letter-spacing:1.35px !important;
+}
+
+.portal-v2 .tracking-panel-head h2{
+    margin:4px 0 0 !important;
+    font-size:25px !important;
+    line-height:1.2 !important;
+    letter-spacing:-.6px !important;
+}
+
+.portal-v2 .tracking-progress-number{
+    flex:0 0 auto !important;
+    border-radius:999px !important;
+    padding:8px 12px !important;
+    background:#f2f5f3 !important;
+    color:#6f7d75 !important;
+    font-size:11px !important;
+    font-weight:850 !important;
+}
+
+.portal-v2 .tracking-steps{
+    display:grid !important;
+    grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+    gap:10px !important;
+    width:100% !important;
+}
+
+.portal-v2 .tracking-step{
+    display:flex !important;
+    align-items:center !important;
+    gap:9px !important;
+    min-width:0 !important;
+    min-height:66px !important;
+    padding:11px !important;
+    border:1px solid #ecefed !important;
+    border-radius:15px !important;
+    background:#f6f8f6 !important;
+}
+
+.portal-v2 .tracking-step-dot{
+    display:grid !important;
+    place-items:center !important;
+    flex:0 0 31px !important;
+    width:31px !important;
+    height:31px !important;
+    border-radius:50% !important;
+    background:#e7ece8 !important;
+    color:#728078 !important;
+    font-size:11px !important;
+    font-weight:900 !important;
+}
+
+.portal-v2 .tracking-step small{
+    display:block !important;
+    margin:0 0 2px !important;
+    color:#96a099 !important;
+    font-size:7px !important;
+    font-weight:900 !important;
+    letter-spacing:.65px !important;
+}
+
+.portal-v2 .tracking-step strong{
+    display:block !important;
+    color:#243129 !important;
+    font-size:10px !important;
+    font-weight:850 !important;
+    line-height:1.25 !important;
+}
+
+.portal-v2 .tracking-step.done{
+    background:#eff8f1 !important;
+    border-color:#d7ecdd !important;
+}
+.portal-v2 .tracking-step.done .tracking-step-dot{
+    background:#188b4b !important;
+    color:#fff !important;
+}
+.portal-v2 .tracking-step.done strong{color:#176a3e !important}
+
+.portal-v2 .tracking-step.active{
+    background:#fff6e6 !important;
+    border-color:#f1dfb9 !important;
+}
+.portal-v2 .tracking-step.active .tracking-step-dot{
+    background:#f28a24 !important;
+    color:#fff !important;
+}
+.portal-v2 .tracking-step.active strong{color:#8e5b12 !important}
+
+.portal-v2 .tracking-result{
+    display:flex !important;
+    align-items:center !important;
+    gap:18px !important;
+    padding:24px !important;
+    border-radius:21px !important;
+}
+
+.portal-v2 .tracking-result-icon{
+    display:grid !important;
+    place-items:center !important;
+    flex:0 0 54px !important;
+    width:54px !important;
+    height:54px !important;
+    border-radius:16px !important;
+    font-size:24px !important;
+    font-weight:900 !important;
+}
+
+.portal-v2 .tracking-result h2{
+    margin:5px 0 6px !important;
+    font-size:23px !important;
+    line-height:1.25 !important;
+    letter-spacing:-.5px !important;
+}
+
+.portal-v2 .tracking-result p{
+    margin:0 !important;
+    font-size:12px !important;
+    line-height:1.6 !important;
+}
+
+.portal-v2 .tracking-result-success{
+    background:linear-gradient(135deg,#eaf8ee,#f8fcf9) !important;
+    border:1px solid #d1ead8 !important;
+}
+.portal-v2 .tracking-result-success .tracking-result-icon{
+    background:#188b4b !important;
+    color:#fff !important;
+}
+.portal-v2 .tracking-result-success p{color:#607168 !important}
+
+.portal-v2 .tracking-result-muted{
+    background:#fff7ec !important;
+    border:1px solid #f1dfc7 !important;
+}
+.portal-v2 .tracking-result-muted .tracking-result-icon{
+    background:#f2a03b !important;
+    color:#fff !important;
+}
+.portal-v2 .tracking-result-muted span{color:#b97218 !important}
+.portal-v2 .tracking-result-muted p{color:#766d60 !important}
+
+.portal-v2 .tracking-info-grid{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:16px !important;
+}
+
+.portal-v2 .tracking-info-card{
+    display:block !important;
+    background:#fff !important;
+    border:1px solid #e0e7e2 !important;
+    border-radius:20px !important;
+    padding:22px !important;
+}
+
+.portal-v2 .tracking-info-card dl{
+    margin:15px 0 0 !important;
+}
+
+.portal-v2 .tracking-info-card dl>div{
+    display:flex !important;
+    justify-content:space-between !important;
+    gap:18px !important;
+    padding:11px 0 !important;
+    border-bottom:1px solid #edf1ee !important;
+}
+
+.portal-v2 .tracking-info-card dl>div:last-child{
+    border-bottom:0 !important;
+}
+
+.portal-v2 .tracking-info-card dt{
+    color:#7a8981 !important;
+    font-size:11px !important;
+    font-weight:600 !important;
+}
+
+.portal-v2 .tracking-info-card dd{
+    margin:0 !important;
+    text-align:right !important;
+    color:#233129 !important;
+    font-size:11px !important;
+    font-weight:850 !important;
+}
+
+.portal-v2 .tracking-next{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:24px !important;
+    padding:22px 24px !important;
+    border-radius:20px !important;
+    background:#0e623a !important;
+    color:#fff !important;
+}
+
+.portal-v2 .tracking-next span{
+    color:#cdeaa0 !important;
+}
+
+.portal-v2 .tracking-next h3{
+    max-width:760px !important;
+    margin:5px 0 0 !important;
+    color:#fff !important;
+    font-size:16px !important;
+    line-height:1.45 !important;
+}
+
+.portal-v2 .tracking-next a{
+    flex:0 0 auto !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:11px 15px !important;
+    border-radius:999px !important;
+    background:#fff !important;
+    color:#0e623a !important;
+    text-decoration:none !important;
+    font-size:11px !important;
+    font-weight:900 !important;
+}
+
+/* Dashboard: user sudah mendaftar */
+.portal-v2 .portal-v2-registered-actions{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:9px !important;
+}
+.portal-v2 .portal-v2-primary-disabled{
+    background:#e8eee9 !important;
+    color:#68756e !important;
+    cursor:not-allowed !important;
+    box-shadow:none !important;
+}
+.portal-v2 .portal-v2-track-link{
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+    padding:10px 12px !important;
+    border:1px solid #d8e4db !important;
+    border-radius:11px !important;
+    background:#fff !important;
+    color:#0e623a !important;
+    text-decoration:none !important;
+    font-size:11px !important;
+    font-weight:900 !important;
+}
+
+/* Responsive */
+@media(max-width:1100px){
+    .portal-v2 .tracking-steps{
+        grid-template-columns:repeat(3,1fr) !important;
+    }
+}
+
+@media(max-width:820px){
+    .portal-v2 .tracking-head,
+    .portal-v2 .tracking-info-grid{
+        grid-template-columns:1fr !important;
+    }
+    .portal-v2 .tracking-next{
+        align-items:flex-start !important;
+        flex-direction:column !important;
+    }
+}
+
+@media(max-width:560px){
+    .portal-v2 .tracking-head h1{
+        font-size:28px !important;
+    }
+    .portal-v2 .tracking-steps{
+        grid-template-columns:1fr 1fr !important;
+    }
+    .portal-v2 .tracking-panel{
+        padding:18px !important;
+    }
+    .portal-v2 .tracking-panel-head{
+        align-items:flex-start !important;
+        flex-direction:column !important;
+    }
+}

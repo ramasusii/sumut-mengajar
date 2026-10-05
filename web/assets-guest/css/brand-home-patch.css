@@ -1,0 +1,43 @@
+/* Sumut Mengajar — brand/home/about patch */
+.gsm-brand-logo{display:flex;align-items:center;min-width:188px}
+.gsm-brand-logo img{display:block;width:auto;height:54px;max-width:220px;object-fit:contain}
+.footer-logo{display:inline-flex;width:max-content;padding:8px 10px;background:#fff;border-radius:14px}
+.footer-logo img{display:block;height:52px;width:auto;max-width:220px;object-fit:contain}
+
+.hero-photo-wrap{min-height:500px;display:flex;align-items:center}
+.hero-photo-card{position:relative;width:100%;height:470px;border-radius:38px;overflow:hidden;box-shadow:0 34px 70px rgba(24,58,48,.22);background:#0e623a}
+.hero-photo-card img{width:100%;height:100%;display:block;object-fit:cover;object-position:center center}
+.hero-photo-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,36,26,.02) 36%,rgba(9,36,26,.72) 100%)}
+.hero-photo-caption{position:absolute;left:34px;right:34px;bottom:32px;color:#fff;display:flex;flex-direction:column;gap:8px;z-index:2}
+.hero-photo-caption small{font-size:10px;font-weight:850;letter-spacing:2px;color:#ffda68}
+.hero-photo-caption strong{font-size:29px;line-height:1.14;letter-spacing:-.7px;max-width:430px}
+.hero-photo-wrap .mini-card{right:-20px;bottom:8px;z-index:3}
+
+.about-intro p:first-child{margin-top:0}
+.identity-head{display:flex;align-items:end;justify-content:space-between;gap:60px;margin-bottom:38px}
+.identity-head h2{margin-top:12px}
+.identity-head>p{max-width:460px;margin:0}
+.identity-grid{display:grid;grid-template-columns:minmax(360px,.88fr) minmax(0,1.12fr);gap:56px;align-items:start}
+.identity-poster{margin:0;position:sticky;top:112px}
+.identity-poster img{display:block;width:100%;border-radius:28px;box-shadow:0 24px 58px rgba(26,67,46,.13);background:#fff}
+.identity-content{display:flex;flex-direction:column;gap:28px}
+.identity-lead{background:#fff;border:1px solid #e5ebe6;border-radius:25px;padding:28px 30px}
+.identity-lead>span{color:#188b4b;font-size:10px;letter-spacing:1.8px;font-weight:900}
+.identity-lead h3{font-size:30px;letter-spacing:-1px;line-height:1.15;margin:10px 0 12px}
+.identity-lead p{margin:0}
+.meaning-list{display:grid;gap:12px}
+.meaning-list article{display:grid;grid-template-columns:45px 1fr;gap:16px;padding:20px 22px;background:#fff;border:1px solid #e5ebe6;border-radius:20px}
+.meaning-list article>b{width:42px;height:42px;border-radius:14px;background:#edf7ef;color:#0e623a;display:grid;place-items:center;font-size:11px}
+.meaning-list h4{margin:2px 0 5px;font-size:17px}
+.meaning-list p{margin:0;font-size:14px;line-height:1.65}
+.identity-slogan{border-radius:24px;padding:28px 30px;background:linear-gradient(135deg,#0e623a,#123d65);color:#fff}
+.identity-slogan small{display:block;color:#ffcf58;font-weight:900;letter-spacing:2px;margin-bottom:8px}
+.identity-slogan strong{display:block;font-size:29px;letter-spacing:-.7px}
+.identity-slogan p{color:rgba(255,255,255,.78);margin-bottom:0;font-size:15px}
+
+@media(max-width:900px){
+  .identity-grid{grid-template-columns:1fr}.identity-poster{position:static;max-width:560px}.identity-head{display:block}.identity-head>p{margin-top:16px}.hero-photo-wrap{min-height:auto}.hero-photo-card{height:420px}.hero-photo-wrap .mini-card{right:12px}
+}
+@media(max-width:720px){
+  .gsm-brand-logo img{height:46px;max-width:180px}.footer-logo img{height:45px}.hero-photo-card{height:340px;border-radius:26px}.hero-photo-caption{left:23px;right:23px;bottom:24px}.hero-photo-caption strong{font-size:23px}.identity-grid{gap:30px}.identity-lead,.identity-slogan{padding:24px}.meaning-list article{grid-template-columns:40px 1fr;padding:18px}.identity-slogan strong{font-size:25px}
+}

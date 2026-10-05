@@ -1,0 +1,92 @@
+# =========================================================
+# SUMUT MENGAJAR - GITIGNORE
+# =========================================================
+
+
+# ---------------------------------------------------------
+# Composer dependencies
+# ---------------------------------------------------------
+/vendor/
+composer.phar
+phpunit.phar
+
+
+# ---------------------------------------------------------
+# Yii runtime / generated files
+# ---------------------------------------------------------
+/runtime/*
+!/runtime/.gitignore
+
+/web/assets/*
+!/web/assets/.gitignore
+
+
+# ---------------------------------------------------------
+# Public uploaded files
+# File upload asli tidak masuk Git.
+# .htaccess tetap disimpan untuk proteksi folder.
+# ---------------------------------------------------------
+/web/uploads/*
+!/web/uploads/.gitignore
+!/web/uploads/.htaccess
+
+
+# ---------------------------------------------------------
+# Applicant / user uploaded documents
+# WAJIB PRIVATE - jangan masuk GitHub
+# ---------------------------------------------------------
+/uploads/*
+!/uploads/.gitignore
+!/uploads/.htaccess
+
+
+# ---------------------------------------------------------
+# Private storage
+# ---------------------------------------------------------
+/storage/private/*
+!/storage/private/.gitignore
+!/storage/private/.htaccess
+
+
+# ---------------------------------------------------------
+# Database backups
+# Migration / SQL setup di /database tetap boleh masuk Git.
+# Hanya backup database penuh yang diabaikan.
+# ---------------------------------------------------------
+/database/backups/
+database/*_full_*.sql
+database/*_backup_*.sql
+database/*_local_*.sql
+
+
+# ---------------------------------------------------------
+# Local configuration / secrets
+# ---------------------------------------------------------
+/config/db.php
+
+.env
+.env.*
+!.env.example
+
+
+# ---------------------------------------------------------
+# IDE
+# ---------------------------------------------------------
+/.idea/
+/.vscode/
+
+
+# ---------------------------------------------------------
+# macOS
+# ---------------------------------------------------------
+.DS_Store
+**/.DS_Store
+
+
+# ---------------------------------------------------------
+# Logs / cache / temporary files
+# ---------------------------------------------------------
+*.log
+*.tmp
+*.cache
+.phpunit.result.cache
