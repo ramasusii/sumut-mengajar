@@ -365,13 +365,33 @@ class ApplicantController extends Controller
             }
 
             if ($field->field_type === 'multi_file' && $uploads) {
+                // Dokumen invalid selalu dibuang agar file pengganti dapat masuk.
                 foreach ($existing as $old) {
                     if ($old->verification_status === 'invalid') {
                         $this->deleteStoredDocument($old);
                         $old->delete();
                     }
                 }
-                $existingUsable = array_values(array_filter($existingUsable, static fn($doc) => $doc->verification_status !== 'invalid'));
+                $existingUsable = array_values(array_filter(
+                    $existingUsable,
+                    static fn($doc) => $doc->verification_status !== 'invalid'
+                ));
+
+                // Jika peserta memilih satu set lengkap (mis. 5 bukti grup WhatsApp),
+                // anggap sebagai penggantian set lama, bukan menambah di atas file lama.
+                // Ini mencegah 5 file lama + 5 file baru dihitung menjadi 10 file.
+                if (count($uploads) >= $minFiles) {
+                    if (count($uploads) > $maxFiles) {
+                        $errors[] = $field->label . ' maksimal ' . $maxFiles . ' file.';
+                        continue;
+                    }
+
+                    foreach ($existingUsable as $old) {
+                        $this->deleteStoredDocument($old);
+                        $old->delete();
+                    }
+                    $existingUsable = [];
+                }
             }
 
             if (count($existingUsable) + count($uploads) > $maxFiles) {
