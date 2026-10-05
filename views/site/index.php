@@ -609,11 +609,7 @@ CSS);
                 <div class="batch-meta">
                     <span>Batch <?= (int)$activeBatch->batch_number ?></span>
                     <span>
-                        <?= Html::encode(
-                            $activeBatch->kabupatenKota
-                            ? $activeBatch->kabupatenKota->label
-                            : 'Sumatera Utara'
-                        ) ?>
+                        <?= Html::encode($activeBatch->getLocationLabel()) ?>
                     </span>
                     <span>
                         s.d.

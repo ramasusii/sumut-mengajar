@@ -34,7 +34,7 @@ $statusLabels = [
                 <tr>
                     <td><?= Html::encode($m->code) ?></td>
                     <td><b><?= Html::encode($m->title) ?></b><br><small>Batch <?= (int)$m->batch_number ?></small></td>
-                    <td><?= Html::encode($m->kabupatenKota ? $m->kabupatenKota->label : '-') ?></td>
+                    <td><?= Html::encode($m->getLocationLabel()) ?></td>
                     <td><?= Yii::$app->formatter->asDate($m->registration_start) ?> – <?= Yii::$app->formatter->asDate($m->registration_end) ?></td>
                     <td><span class="label label-info"><?= Html::encode($statusLabels[$m->status] ?? 'Tidak diketahui') ?></span></td>
                     <td>

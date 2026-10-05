@@ -46,6 +46,8 @@ $isApplicant = !Yii::$app->user->isGuest && Yii::$app->user->can('applicant');
         <article>
             <h3>Timeline</h3>
             <dl>
+                <dt>Lokasi Pengabdian</dt>
+                <dd><?= Html::encode($model->getLocationLabel()) ?></dd>
                 <dt>Pendaftaran</dt>
                 <dd><?= Yii::$app->formatter->asDate($model->registration_start) ?> – <?= Yii::$app->formatter->asDate($model->registration_end) ?></dd>
                 <dt>Wawancara</dt>

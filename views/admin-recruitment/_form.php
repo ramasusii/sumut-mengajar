@@ -16,7 +16,10 @@ $regionItems = ArrayHelper::map($regions, 'id', fn($r) => $r->label);
         </div>
 
         <div class="row">
-            <div class="col-md-6"><?= $form->field($model, 'kabupaten_kota_id')->dropDownList($regionItems, ['prompt' => 'Pilih lokasi']) ?></div>
+            <div class="col-md-6">
+                <?= $form->field($model, 'location_ids')->checkboxList($regionItems, ['class' => 'batch-location-picker'])->label('Lokasi Pengabdian') ?>
+                <p class="help-block" style="margin-top:-8px">Satu batch dapat memiliki beberapa kabupaten/kota. Centang semua lokasi tujuan pengabdian.</p>
+            </div>
             <div class="col-md-3"><?= $form->field($model, 'code')->textInput(['placeholder' => 'Akan dibuat otomatis jika dikosongkan']) ?></div>
             <div class="col-md-3">
                 <?= $form->field($model, 'status')->dropDownList([
@@ -52,3 +55,12 @@ $regionItems = ArrayHelper::map($regions, 'id', fn($r) => $r->label);
 </div>
 
 <?php ActiveForm::end(); ?>
+
+<?php
+$this->registerCss(<<<'CSS'
+.batch-location-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px;max-height:270px;overflow:auto;padding:10px;border:1px solid #d9e2dc;border-radius:8px;background:#fbfcfb}
+.batch-location-picker label{display:flex;align-items:flex-start;gap:7px;margin:0;padding:7px 9px;border:1px solid #edf1ee;border-radius:7px;background:#fff;font-weight:500;cursor:pointer}
+.batch-location-picker label:hover{border-color:#b9d5c3;background:#f4faf6}.batch-location-picker input{margin-top:2px!important}
+@media(max-width:767px){.batch-location-picker{grid-template-columns:1fr}}
+CSS);
+?>

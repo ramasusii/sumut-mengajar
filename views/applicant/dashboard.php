@@ -50,7 +50,7 @@ foreach ($applications as $application) {
     <div class="portal-v2-section-head"><div><span>AKTIVITAS SAYA</span><h2>Pendaftaran Saya</h2></div><a href="<?= Url::to(['/recruitment/index']) ?>">Lihat semua rekrutmen →</a></div>
     <div class="portal-v2-application-list">
         <?php foreach ($applications as $app): ?>
-            <?php $region = $app->batch->kabupatenKota ? $app->batch->kabupatenKota->label : 'Sumatera Utara'; ?>
+            <?php $region = $app->batch->getLocationLabel(); ?>
             <article class="portal-v2-application-card">
                 <div class="portal-v2-app-main">
                     <div class="portal-v2-app-code"><?= Html::encode($app->application_code) ?></div>
@@ -80,7 +80,7 @@ foreach ($applications as $application) {
     <?php else: ?>
         <div class="portal-v2-batch-grid">
             <?php foreach ($openBatches as $batch): ?>
-                <?php $existing = $applicationByBatch[(int)$batch->id] ?? null; $region = $batch->kabupatenKota ? $batch->kabupatenKota->label : 'Sumatera Utara'; ?>
+                <?php $existing = $applicationByBatch[(int)$batch->id] ?? null; $region = $batch->getLocationLabel(); ?>
                 <article class="portal-v2-batch-card">
                     <div class="portal-v2-batch-top"><span class="portal-v2-open-dot"><i></i> PENDAFTARAN DIBUKA</span><span>Batch <?= (int)$batch->batch_number ?></span></div>
                     <h3><?= Html::encode($batch->title) ?></h3>

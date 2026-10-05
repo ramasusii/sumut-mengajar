@@ -77,9 +77,7 @@ $statusDescriptions = [
 
 $label = $statusLabels[$model->status] ?? 'Sedang Diproses';
 $description = $statusDescriptions[$model->status] ?? 'Pendaftaranmu sedang diproses oleh panitia.';
-$region = $model->batch && $model->batch->kabupatenKota
-    ? $model->batch->kabupatenKota->label
-    : 'Sumatera Utara';
+$region = $model->batch ? $model->batch->getLocationLabel() : 'Sumatera Utara';
 
 $steps = [
     ['key' => 'account', 'label' => 'Akun'],

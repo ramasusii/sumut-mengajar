@@ -45,7 +45,7 @@ $statusBadge = static fn($status) => match($status){
                 <tr>
                     <td><b><?= Html::encode($model->application_code) ?></b></td>
                     <td><b><?= Html::encode($model->user->nama ?: ($model->profile->nama_lengkap ?? '-')) ?></b><br><small><?= Html::encode($model->user->whatsapp ?: ($model->profile->nomor_whatsapp ?? $model->user->email ?: '-')) ?></small></td>
-                    <td><b>Batch <?= (int)$model->batch->batch_number ?></b><br><small><?= Html::encode($model->batch->kabupatenKota ? $model->batch->kabupatenKota->label : '-') ?></small></td>
+                    <td><b>Batch <?= (int)$model->batch->batch_number ?></b><br><small><?= Html::encode($model->batch->getLocationLabel()) ?></small></td>
                     <td><span class="label <?= $statusBadge($model->status) ?>"><?= Html::encode($statusLabels[$model->status] ?? 'Sedang Diproses') ?></span></td>
                     <td><small><?= count($model->documents) ?> upload<?= $valid?' · '.$valid.' valid':'' ?><?= $invalid?' · '.$invalid.' revisi':'' ?></small></td>
                     <td><?= $model->submitted_at ? Yii::$app->formatter->asDatetime($model->submitted_at,'php:d M Y H:i') : '<span class="text-muted">Belum dikirim</span>' ?></td>

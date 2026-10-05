@@ -1,6 +1,7 @@
 <?php
 namespace app\models;
 
+use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -11,6 +12,9 @@ class RecruitmentBatch extends ActiveRecord
     public const STATUS_CLOSED='closed';
     public const STATUS_ANNOUNCED='announced';
 
+    /** @var int[] Lokasi pengabdian yang dipilih pada form admin. */
+    public $location_ids = [];
+
     public static function tableName(){ return 'recruitment_batch'; }
     public function behaviors(){ return [TimestampBehavior::className()]; }
 
@@ -18,6 +22,8 @@ class RecruitmentBatch extends ActiveRecord
     {
         return [
             [['code','title','slug','batch_number','registration_start','registration_end','status'], 'required'],
+            [['location_ids'], 'required', 'message' => 'Pilih minimal satu lokasi pengabdian.'],
+            [['location_ids'], 'each', 'rule' => ['integer']],
             [['kabupaten_kota_id','chapter_id','batch_number','quota','created_by','created_at','updated_at'], 'integer'],
             [['description','requirements','benefits'], 'string'],
             [['registration_start','registration_end','interview_date','briefing_date','activity_start','activity_end','announcement_date'], 'safe'],
@@ -26,6 +32,20 @@ class RecruitmentBatch extends ActiveRecord
             [['code'], 'unique'], [['slug'], 'unique'],
             [['registration_end'], 'validateTimeline'],
         ];
+    }
+
+    public function afterFind()
+    {
+        parent::afterFind();
+        $this->location_ids = [];
+
+        if ($this->hasLocationTable()) {
+            $this->location_ids = array_map('intval', $this->getLocations()->select('kabupaten_kota.id')->column());
+        }
+
+        if (!$this->location_ids && $this->kabupaten_kota_id) {
+            $this->location_ids = [(int)$this->kabupaten_kota_id];
+        }
     }
 
     public function validateTimeline($attribute)
@@ -54,6 +74,37 @@ class RecruitmentBatch extends ActiveRecord
     }
 
     public function getKabupatenKota(){ return $this->hasOne(KabupatenKota::class, ['id'=>'kabupaten_kota_id']); }
+
+    public function getLocations()
+    {
+        return $this->hasMany(KabupatenKota::class, ['id' => 'kabupaten_kota_id'])
+            ->viaTable('recruitment_batch_location', ['batch_id' => 'id'])
+            ->orderBy(['kabupaten_kota.nama' => SORT_ASC]);
+    }
+
+    public function getLocationLabel(): string
+    {
+        $rows = [];
+        if ($this->hasLocationTable()) {
+            try { $rows = $this->locations; } catch (\Throwable $e) { $rows = []; }
+        }
+
+        if ($rows) {
+            return implode(', ', array_map(static fn($region) => $region->label, $rows));
+        }
+
+        return $this->kabupatenKota ? $this->kabupatenKota->label : 'Sumatera Utara';
+    }
+
+    public function hasLocationTable(): bool
+    {
+        try {
+            return Yii::$app->db->schema->getTableSchema('recruitment_batch_location', true) !== null;
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
     public function getChapter(){ return $this->hasOne(Chapter::class, ['id'=>'chapter_id']); }
     public function getApplications(){ return $this->hasMany(Application::class, ['batch_id'=>'id']); }
 
