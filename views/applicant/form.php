@@ -8,6 +8,8 @@ $this->title = $isRevision ? 'Perbaiki Berkas' : 'Formulir Pendaftaran';
 $nonFileFields = array_values(array_filter($fields, static fn($field) => !$field->isFileField()));
 $fileFields = array_values(array_filter($fields, static fn($field) => $field->isFileField()));
 $stepLabels = [1 => 'Data Diri', 2 => 'Pertanyaan', 3 => 'Dokumen', 4 => 'Tinjau & Kirim'];
+$maxUploadBytes = 200 * 1024;
+$maxUploadLabel = '200 KB';
 
 $answerValue = static function ($field, $answers) {
     $answer = $answers[$field->id] ?? null;
@@ -115,7 +117,7 @@ $fieldLimits = static function ($field) {
 
     <?php elseif ($step === 3): ?>
         <section class="application-form-card">
-            <div class="application-form-card-head"><span>LANGKAH 3 DARI 4</span><h2><?= $isRevision ? 'Perbaiki Dokumen' : 'Dokumen & Bukti Persyaratan' ?></h2><p>File yang diterima: JPG, PNG, atau PDF maksimal 10 MB per file.</p></div>
+            <div class="application-form-card-head"><span>LANGKAH 3 DARI 4</span><h2><?= $isRevision ? 'Perbaiki Dokumen' : 'Dokumen & Bukti Persyaratan' ?></h2><p>File yang diterima: JPG, PNG, atau PDF. Maksimal <?= Html::encode($maxUploadLabel) ?> per file.</p></div>
             <?php if (!$fileFields): ?>
                 <div class="application-form-errors"><strong>Persyaratan dokumen belum tersedia.</strong><ul><li>Silakan hubungi panitia Sumut Mengajar.</li></ul></div>
             <?php else: ?>
@@ -125,17 +127,24 @@ $fieldLimits = static function ($field) {
                     <div class="application-form-document <?= $invalid?'needs-revision':'' ?>">
                         <div>
                             <h3><?= Html::encode($field->label) ?> <?= (int)$field->is_required?'<span style="color:#e06e43">*</span>':'' ?></h3>
-                            <p><?= Html::encode($field->help_text ?: 'JPG, PNG, atau PDF maksimal 10 MB.') ?></p>
+                            <?php if ($field->help_text && !preg_match('/\\b(?:KB|MB|GB)\\b/i', (string)$field->help_text)): ?>
+                                <p><?= Html::encode($field->help_text) ?></p>
+                            <?php endif; ?>
+                            <p class="application-file-limit"><b>JPG, PNG, atau PDF • maksimal <?= Html::encode($maxUploadLabel) ?> per file.</b></p>
                             <?php if ($field->field_type==='multi_file'): ?><p><b>Minimal <?= $minFiles ?> file, maksimal <?= $maxFiles ?> file.</b></p><?php endif; ?>
                             <?php foreach ($existing as $doc): ?>
                                 <span class="existing <?= $doc->verification_status==='invalid'?'invalid':'' ?>"> <?= $doc->verification_status==='invalid'?'!':'✓' ?> <?= Html::encode($doc->original_name ?: 'dokumen') ?><?= $doc->verification_note ? ' — '.Html::encode($doc->verification_note) : '' ?></span>
                             <?php endforeach; ?>
                         </div>
+                        <div class="application-file-control">
                         <?php if ($field->field_type==='multi_file'): ?>
-                            <input type="file" name="upload_<?= (int)$field->id ?>[]" accept=".jpg,.jpeg,.png,.pdf" multiple>
+                            <input class="application-file-input" type="file" name="upload_<?= (int)$field->id ?>[]" accept=".jpg,.jpeg,.png,.pdf" multiple data-max-size="<?= (int)$maxUploadBytes ?>" data-max-files="<?= (int)$maxFiles ?>">
                         <?php else: ?>
-                            <input type="file" name="upload_<?= (int)$field->id ?>" accept=".jpg,.jpeg,.png,.pdf">
+                            <input class="application-file-input" type="file" name="upload_<?= (int)$field->id ?>" accept=".jpg,.jpeg,.png,.pdf" data-max-size="<?= (int)$maxUploadBytes ?>" data-max-files="1">
                         <?php endif; ?>
+                            <div class="application-file-status" aria-live="polite">Belum ada file dipilih.</div>
+                            <div class="application-file-error" aria-live="assertive" hidden></div>
+                        </div>
                     </div>
                 <?php endforeach; ?>
                 <div class="application-form-actions">
@@ -158,3 +167,208 @@ $fieldLimits = static function ($field) {
         </section>
     <?php endif; ?>
 </div>
+
+<?php
+$this->registerCss(<<<'CSS'
+/* FORM V13 — compact premium radio/checkbox */
+.launch-form-v3 .application-form-options{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:10px;
+}
+.launch-form-v3 .application-form-option{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-height:64px;
+    margin:0;
+    padding:13px 15px;
+    border:1px solid #dfe7e1;
+    border-radius:14px;
+    background:#fbfcfb;
+    color:#1f2d25;
+    line-height:1.45;
+    cursor:pointer;
+    transition:border-color .18s ease,background .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+.launch-form-v3 .application-form-option:hover{
+    border-color:#b8d4c1;
+    background:#f7fbf8;
+    transform:translateY(-1px);
+}
+.launch-form-v3 .application-form-option input[type="radio"],
+.launch-form-v3 .application-form-option input[type="checkbox"]{
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    width:22px !important;
+    min-width:22px !important;
+    max-width:22px !important;
+    height:22px !important;
+    min-height:22px !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:2px solid #c9d7ce !important;
+    background:#fff !important;
+    box-shadow:none !important;
+    outline:none;
+    display:grid;
+    place-content:center;
+    flex:0 0 22px;
+    cursor:pointer;
+}
+.launch-form-v3 .application-form-option input[type="radio"]{border-radius:50% !important}
+.launch-form-v3 .application-form-option input[type="checkbox"]{border-radius:6px !important}
+.launch-form-v3 .application-form-option input[type="radio"]:checked{
+    border:6px solid #0f7a46 !important;
+    background:#fff !important;
+}
+.launch-form-v3 .application-form-option input[type="checkbox"]:checked{
+    border-color:#0f7a46 !important;
+    background:#0f7a46 !important;
+}
+.launch-form-v3 .application-form-option input[type="checkbox"]:checked::after{
+    content:"✓";
+    color:#fff;
+    font-size:14px;
+    line-height:1;
+    font-weight:900;
+}
+.launch-form-v3 .application-form-option:has(input:checked){
+    border-color:#99c8aa;
+    background:#eff8f2;
+    box-shadow:0 0 0 3px rgba(15,122,70,.07);
+}
+.launch-form-v3 .application-file-limit{
+    color:#176c3f !important;
+}
+.launch-form-v3 .application-file-control{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+.launch-form-v3 .application-file-input{
+    width:100%;
+    max-width:100%;
+    min-height:44px;
+    padding:7px 8px;
+    border:1px dashed #b8cbbf;
+    border-radius:11px;
+    background:#fff;
+    font-size:10px;
+}
+.launch-form-v3 .application-file-input::file-selector-button{
+    border:0;
+    border-radius:9px;
+    padding:8px 11px;
+    margin-right:9px;
+    background:#eaf5ee;
+    color:#0e623a;
+    font-size:10px;
+    font-weight:900;
+    cursor:pointer;
+}
+.launch-form-v3 .application-file-status{
+    font-size:9px;
+    color:#7b8981;
+    line-height:1.45;
+}
+.launch-form-v3 .application-file-error{
+    padding:8px 10px;
+    border:1px solid #efc8bf;
+    border-radius:9px;
+    background:#fff2ef;
+    color:#9a4538;
+    font-size:9px;
+    font-weight:800;
+    line-height:1.45;
+}
+@media(max-width:720px){
+    .launch-form-v3 .application-form-options{grid-template-columns:1fr}
+    .launch-form-v3 .application-form-option{min-height:58px}
+}
+CSS);
+
+$this->registerJs(<<<'JS'
+(function () {
+    const formatKb = bytes => Math.ceil(bytes / 1024) + ' KB';
+
+    function validateFileInput(input) {
+        const maxSize = Number(input.dataset.maxSize || 204800);
+        const maxFiles = Number(input.dataset.maxFiles || 1);
+        const wrap = input.closest('.application-file-control');
+        const status = wrap ? wrap.querySelector('.application-file-status') : null;
+        const error = wrap ? wrap.querySelector('.application-file-error') : null;
+        const files = Array.from(input.files || []);
+
+        if (error) {
+            error.hidden = true;
+            error.textContent = '';
+        }
+
+        if (!files.length) {
+            if (status) status.textContent = 'Belum ada file dipilih.';
+            return true;
+        }
+
+        if (files.length > maxFiles) {
+            if (error) {
+                error.hidden = false;
+                error.textContent = 'Maksimal ' + maxFiles + ' file untuk bagian ini.';
+            }
+            input.value = '';
+            if (status) status.textContent = 'Belum ada file dipilih.';
+            return false;
+        }
+
+        const oversized = files.find(file => file.size > maxSize);
+        if (oversized) {
+            if (error) {
+                error.hidden = false;
+                error.textContent = 'File "' + oversized.name + '" berukuran ' + formatKb(oversized.size) +
+                    '. Maksimal 200 KB per file. Silakan kompres atau pilih file lain.';
+            }
+            input.value = '';
+            if (status) status.textContent = 'File ditolak karena melebihi 200 KB.';
+            return false;
+        }
+
+        const allowed = ['image/jpeg', 'image/png', 'application/pdf'];
+        const invalidType = files.find(file => file.type && !allowed.includes(file.type));
+        if (invalidType) {
+            if (error) {
+                error.hidden = false;
+                error.textContent = 'Format "' + invalidType.name + '" tidak didukung. Gunakan JPG, PNG, atau PDF.';
+            }
+            input.value = '';
+            if (status) status.textContent = 'Belum ada file dipilih.';
+            return false;
+        }
+
+        if (status) {
+            status.textContent = files.length === 1
+                ? files[0].name + ' • ' + formatKb(files[0].size)
+                : files.length + ' file dipilih • semua file maksimal 200 KB';
+        }
+        return true;
+    }
+
+    document.querySelectorAll('.application-file-input').forEach(input => {
+        input.addEventListener('change', () => validateFileInput(input));
+    });
+
+    document.querySelectorAll('.launch-form-v3 form[enctype="multipart/form-data"]').forEach(form => {
+        form.addEventListener('submit', function (event) {
+            let valid = true;
+            form.querySelectorAll('.application-file-input').forEach(input => {
+                if (!validateFileInput(input)) valid = false;
+            });
+            if (!valid) {
+                event.preventDefault();
+                const firstError = form.querySelector('.application-file-error:not([hidden])');
+                if (firstError) firstError.scrollIntoView({behavior:'smooth', block:'center'});
+            }
+        });
+    });
+})();
+JS);
+?>

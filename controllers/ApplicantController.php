@@ -18,6 +18,7 @@ use yii\web\UploadedFile;
 
 class ApplicantController extends Controller
 {
+    private const MAX_DOCUMENT_BYTES = 200 * 1024;
     public $layout = 'applicant';
 
     public function behaviors()
@@ -401,8 +402,21 @@ class ApplicantController extends Controller
 
     private function storeDocument(Application $app, RecruitmentFormField $field, UploadedFile $uploaded, string $uploadRoot): void
     {
-        if ($uploaded->size <= 0 || $uploaded->size > 10 * 1024 * 1024) {
-            throw new \RuntimeException('ukuran file maksimal 10 MB.');
+        if ($uploaded->error !== UPLOAD_ERR_OK) {
+            if (in_array($uploaded->error, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
+                throw new \RuntimeException('ukuran file melebihi batas. Maksimal 200 KB per file.');
+            }
+            throw new \RuntimeException('file belum dapat diunggah. Silakan pilih ulang file.');
+        }
+
+        if ($uploaded->size <= 0) {
+            throw new \RuntimeException('file kosong atau tidak dapat dibaca.');
+        }
+
+        if ($uploaded->size > self::MAX_DOCUMENT_BYTES) {
+            throw new \RuntimeException(
+                'ukuran file ' . (int)ceil($uploaded->size / 1024) . ' KB. Maksimal 200 KB per file.'
+            );
         }
 
         $mime = FileHelper::getMimeType($uploaded->tempName);
