@@ -2,9 +2,9 @@
 namespace app\models;
 
 use app\components\PhoneHelper;
+use app\components\AlumniPhotoHelper;
 use Yii;
 use yii\base\Model;
-use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
 class AlumniRegistrationForm extends Model
@@ -43,7 +43,7 @@ class AlumniRegistrationForm extends Model
             [['publication_type'], 'in', 'range' => array_keys(AlumniPublication::TYPES), 'skipOnEmpty' => true],
             ['whatsapp', 'validateWhatsapp'],
             ['consent_public', 'compare', 'compareValue' => 1, 'operator' => '==', 'message' => 'Persetujuan publikasi profil wajib diberikan untuk pendaftaran alumni.'],
-            ['photo', 'file', 'extensions' => ['jpg', 'jpeg', 'png'], 'maxSize' => 5 * 1024 * 1024, 'skipOnEmpty' => true],
+            ['photo', 'file', 'extensions' => ['jpg', 'jpeg', 'png'], 'maxSize' => AlumniPhotoHelper::MAX_BYTES, 'skipOnEmpty' => true, 'checkExtensionByMimeType' => true],
         ];
     }
 
@@ -147,19 +147,7 @@ class AlumniRegistrationForm extends Model
 
     private function savePhoto(UploadedFile $file): string
     {
-        $imageInfo = @getimagesize($file->tempName);
-        if (!$imageInfo || !in_array($imageInfo['mime'], ['image/jpeg', 'image/png'], true)) {
-            throw new \RuntimeException('Format foto tidak valid.');
-        }
-
-        $dir = Yii::getAlias('@app/web/uploads/alumni');
-        FileHelper::createDirectory($dir, 0775, true);
-        $extension = $imageInfo['mime'] === 'image/png' ? 'png' : 'jpg';
-        $name = 'alumni-' . time() . '-' . Yii::$app->security->generateRandomString(8) . '.' . $extension;
-        if (!$file->saveAs($dir . '/' . $name)) {
-            throw new \RuntimeException('Foto belum dapat disimpan.');
-        }
-        return 'web/uploads/alumni/' . $name;
+        return AlumniPhotoHelper::saveNormalized($file);
     }
 
     private function uniqueSlug(string $name, int $batchNumber): string

@@ -2,6 +2,7 @@
 namespace app\controllers;
 
 use app\components\PhoneHelper;
+use app\components\AlumniPhotoHelper;
 use app\models\AlumniCareer;
 use app\models\AlumniProfile;
 use app\models\AlumniPublication;
@@ -10,7 +11,6 @@ use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\FileHelper;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -26,7 +26,7 @@ class AdminAlumniController extends Controller
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
-                    ['allow' => true, 'roles' => ['superAdmin', 'adminGsm']],
+                    ['allow' => true, 'roles' => ['developer', 'superAdmin', 'adminGsm']],
                 ],
                 'denyCallback' => function () {
                     if (Yii::$app->user->isGuest) {
@@ -296,21 +296,7 @@ class AdminAlumniController extends Controller
 
     private function savePhoto(UploadedFile $file): string
     {
-        if ($file->size <= 0 || $file->size > 5 * 1024 * 1024) {
-            throw new \RuntimeException('Ukuran foto maksimal 5 MB.');
-        }
-        $info = @getimagesize($file->tempName);
-        if (!$info || !in_array($info['mime'], ['image/jpeg', 'image/png', 'image/webp'], true)) {
-            throw new \RuntimeException('Foto harus berupa JPG, PNG, atau WebP.');
-        }
-        $ext = match ($info['mime']) { 'image/png' => 'png', 'image/webp' => 'webp', default => 'jpg' };
-        $dir = Yii::getAlias('@app/web/uploads/alumni');
-        FileHelper::createDirectory($dir, 0775, true);
-        $name = 'alumni-' . time() . '-' . Yii::$app->security->generateRandomString(8) . '.' . $ext;
-        if (!$file->saveAs($dir . '/' . $name)) {
-            throw new \RuntimeException('Foto belum dapat disimpan.');
-        }
-        return 'web/uploads/alumni/' . $name;
+        return AlumniPhotoHelper::saveNormalized($file);
     }
 
     private function deletePhoto(?string $path): void
