@@ -203,10 +203,14 @@ $resultClass = $model->status === 'final_pass' ? 'success' : ($model->status ===
                 </div>
                 <div>
                     <dt>Pembekalan</dt>
-                    <dd><?= $model->batch->briefing_date ? Yii::$app->formatter->asDate($model->batch->briefing_date, 'php:d M Y') : 'Menunggu informasi' ?></dd>
+                    <dd><?= Html::encode($model->batch->getBriefingPeriodLabel()) ?></dd>
                 </div>
                 <div>
-                    <dt>Pengumuman</dt>
+                    <dt>Pengabdian</dt>
+                    <dd><?= Html::encode($model->batch->getServicePeriodLabel()) ?></dd>
+                </div>
+                <div>
+                    <dt>Pengumuman Akhir</dt>
                     <dd><?= $model->batch->announcement_date ? Yii::$app->formatter->asDate($model->batch->announcement_date, 'php:d M Y') : 'Menunggu informasi' ?></dd>
                 </div>
             </dl>

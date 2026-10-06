@@ -37,12 +37,34 @@ $regionItems = ArrayHelper::map($regions, 'id', fn($r) => $r->label);
             <div class="col-md-3"><?= $form->field($model, 'registration_start')->input('date')->label('Mulai Pendaftaran') ?></div>
             <div class="col-md-3"><?= $form->field($model, 'registration_end')->input('date')->label('Tutup Pendaftaran') ?></div>
             <div class="col-md-3"><?= $form->field($model, 'interview_date')->input('date')->label('Wawancara') ?></div>
-            <div class="col-md-3"><?= $form->field($model, 'announcement_date')->input('date')->label('Pengumuman') ?></div>
+            <div class="col-md-3"><?= $form->field($model, 'announcement_date')->input('date')->label('Pengumuman Akhir') ?></div>
         </div>
-        <div class="row">
-            <div class="col-md-4"><?= $form->field($model, 'briefing_date')->input('date')->label('Pembekalan') ?></div>
-            <div class="col-md-4"><?= $form->field($model, 'activity_start')->input('date')->label('Mulai Pengabdian') ?></div>
-            <div class="col-md-4"><?= $form->field($model, 'activity_end')->input('date')->label('Selesai Pengabdian') ?></div>
+        <div class="batch-flexible-schedule">
+            <div class="batch-flexible-schedule__head">
+                <b>Pembekalan & Pengabdian</b>
+                <span>Tidak menggunakan tanggal pasti.</span>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <?= $form->field($model, 'briefing_start_month')
+                        ->dropDownList(RecruitmentBatch::monthOptions(), ['prompt' => 'Pilih bulan'])
+                        ->label('Pembekalan Mulai') ?>
+                </div>
+                <div class="col-md-4">
+                    <?= $form->field($model, 'briefing_end_month')
+                        ->dropDownList(RecruitmentBatch::monthOptions(), ['prompt' => 'Pilih bulan'])
+                        ->label('Pembekalan Sampai') ?>
+                </div>
+                <div class="col-md-4">
+                    <?= $form->field($model, 'service_semester')
+                        ->dropDownList(RecruitmentBatch::serviceSemesterOptions(), ['prompt' => 'Pilih periode'])
+                        ->label('Periode Pengabdian') ?>
+                </div>
+            </div>
+            <div class="batch-flexible-schedule__examples">
+                <span><i class="fa fa-calendar-o"></i> Contoh pembekalan: <b>November – Januari</b> atau <b>Januari – Maret</b>.</span>
+                <span><i class="fa fa-graduation-cap"></i> Pengabdian dilaksanakan saat <b>Libur Semester Ganjil</b> atau <b>Libur Semester Genap</b>.</span>
+            </div>
         </div>
 
         <div class="row">
@@ -61,6 +83,11 @@ $this->registerCss(<<<'CSS'
 .batch-location-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px;max-height:270px;overflow:auto;padding:10px;border:1px solid #d9e2dc;border-radius:8px;background:#fbfcfb}
 .batch-location-picker label{display:flex;align-items:flex-start;gap:7px;margin:0;padding:7px 9px;border:1px solid #edf1ee;border-radius:7px;background:#fff;font-weight:500;cursor:pointer}
 .batch-location-picker label:hover{border-color:#b9d5c3;background:#f4faf6}.batch-location-picker input{margin-top:2px!important}
-@media(max-width:767px){.batch-location-picker{grid-template-columns:1fr}}
+.batch-flexible-schedule{margin:4px 0 18px;padding:16px;border:1px solid #dfe8e2;border-radius:12px;background:#fbfdfb}
+.batch-flexible-schedule__head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;color:#233329}
+.batch-flexible-schedule__head b{font-size:15px}.batch-flexible-schedule__head span{font-size:12px;color:#7c8981}
+.batch-flexible-schedule__examples{display:flex;flex-wrap:wrap;gap:10px 18px;padding-top:4px;color:#647269;font-size:12px}
+.batch-flexible-schedule__examples i{color:#16824a;margin-right:4px}
+@media(max-width:767px){.batch-location-picker{grid-template-columns:1fr}.batch-flexible-schedule__head{align-items:flex-start;flex-direction:column}}
 CSS);
 ?>

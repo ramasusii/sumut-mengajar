@@ -264,7 +264,7 @@ CSS);
                         </div>
 
                         <div class="check-status-v9__row">
-                            <span>Pengumuman</span>
+                            <span>Pengumuman Akhir</span>
                             <b>
                                 <?= $application->batch->announcement_date
                                     ? Yii::$app->formatter->asDate($application->batch->announcement_date)
