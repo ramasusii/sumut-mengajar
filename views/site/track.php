@@ -84,7 +84,7 @@ $this->registerCss(<<<'CSS'
 .check-status-v9__row{display:flex;justify-content:space-between;gap:18px;border-bottom:1px solid #edf1ee;padding:10px 0;font-size:11px}
 .check-status-v9__row:last-child{border-bottom:0}
 .check-status-v9__row span{color:#7b8981}
-.check-status-v9__row b{text-align:right;color:#27342c}
+.check-status-v9__row b{text-align:right;color:#27342c;max-width:62%;line-height:1.5;overflow-wrap:anywhere}
 .check-status-v9__notice{border-radius:20px;padding:22px;background:#eaf8ee;border:1px solid #d1ead8}
 .check-status-v9__notice h3{margin:5px 0;color:#126d3d;font-size:20px}
 .check-status-v9__notice p{margin:0;color:#607168;font-size:11px;line-height:1.6}
@@ -156,9 +156,11 @@ CSS);
             $description = $statusDescriptions[$status] ?? 'Pendaftaran sedang diproses oleh panitia.';
             $stepNow = $activeStep($status);
 
-            $region = $application->batch->kabupatenKota
-                ? $application->batch->kabupatenKota->label
-                : 'Sumatera Utara';
+            $region = method_exists($application->batch, 'getLocationLabel')
+                ? $application->batch->getLocationLabel()
+                : ($application->batch->kabupatenKota
+                    ? $application->batch->kabupatenKota->label
+                    : 'Sumatera Utara');
             ?>
 
             <div class="check-status-v9__result">
@@ -257,9 +259,24 @@ CSS);
                         <div class="check-status-v9__row">
                             <span>Pembekalan</span>
                             <b>
-                                <?= $application->batch->briefing_date
-                                    ? Yii::$app->formatter->asDate($application->batch->briefing_date)
-                                    : 'Akan diinformasikan' ?>
+                                <?= Html::encode(
+                                    method_exists($application->batch, 'getBriefingPeriodLabel')
+                                        ? $application->batch->getBriefingPeriodLabel()
+                                        : ($application->batch->briefing_date
+                                            ? Yii::$app->formatter->asDate($application->batch->briefing_date)
+                                            : 'Akan diinformasikan')
+                                ) ?>
+                            </b>
+                        </div>
+
+                        <div class="check-status-v9__row">
+                            <span>Pengabdian</span>
+                            <b>
+                                <?= Html::encode(
+                                    method_exists($application->batch, 'getServicePeriodLabel')
+                                        ? $application->batch->getServicePeriodLabel()
+                                        : 'Akan diinformasikan'
+                                ) ?>
                             </b>
                         </div>
 

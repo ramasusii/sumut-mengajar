@@ -312,6 +312,87 @@ $this->registerCss(<<<'CSS'
         width:100%!important;
     }
 }
+
+/* IMPACT STRIP V22.3 — prevent legacy flex/order rules from breaking the 3 stats */
+.gsm-impact-v223{
+    background:#174a76!important;
+    color:#fff!important;
+    padding:40px 0!important;
+}
+.gsm-impact-v223__grid{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;
+    align-items:stretch!important;
+    width:min(1180px,calc(100% - 48px))!important;
+    margin:0 auto!important;
+}
+.gsm-impact-v223__item{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:18px!important;
+    min-width:0!important;
+    width:auto!important;
+    margin:0!important;
+    padding:14px 34px!important;
+    border-right:1px solid rgba(255,255,255,.16)!important;
+    border-bottom:0!important;
+    order:initial!important;
+    grid-column:auto!important;
+    grid-row:auto!important;
+}
+.gsm-impact-v223__item:nth-child(1){
+    grid-column:1!important;
+    grid-row:1!important;
+}
+.gsm-impact-v223__item:nth-child(2){
+    grid-column:2!important;
+    grid-row:1!important;
+}
+.gsm-impact-v223__item:nth-child(3){
+    grid-column:3!important;
+    grid-row:1!important;
+    border-right:0!important;
+}
+.gsm-impact-v223__number{
+    flex:0 0 auto!important;
+    color:#ffd15c!important;
+    font-size:42px!important;
+    line-height:1!important;
+    font-weight:900!important;
+    letter-spacing:-1px!important;
+}
+.gsm-impact-v223__label{
+    max-width:210px!important;
+    color:rgba(255,255,255,.88)!important;
+    font-size:13px!important;
+    line-height:1.45!important;
+}
+@media(max-width:760px){
+    .gsm-impact-v223{
+        padding:18px 0!important;
+    }
+    .gsm-impact-v223__grid{
+        grid-template-columns:1fr!important;
+        width:min(100% - 30px,1180px)!important;
+    }
+    .gsm-impact-v223__item,
+    .gsm-impact-v223__item:nth-child(1),
+    .gsm-impact-v223__item:nth-child(2),
+    .gsm-impact-v223__item:nth-child(3){
+        grid-column:1!important;
+        grid-row:auto!important;
+        justify-content:flex-start!important;
+        padding:20px 8px!important;
+        border-right:0!important;
+        border-bottom:1px solid rgba(255,255,255,.14)!important;
+    }
+    .gsm-impact-v223__item:last-child{
+        border-bottom:0!important;
+    }
+}
+
 CSS);
 ?>
 
@@ -508,19 +589,19 @@ CSS);
     </div>
 </section>
 
-<section class="impact">
-    <div class="container impact-grid">
-        <div>
-            <b>33</b>
-            <span>Kabupaten/Kota Sumatera Utara</span>
+<section class="gsm-impact-v223" aria-label="Capaian Sumut Mengajar">
+    <div class="gsm-impact-v223__grid">
+        <div class="gsm-impact-v223__item">
+            <b class="gsm-impact-v223__number">33</b>
+            <span class="gsm-impact-v223__label">Kabupaten/Kota Sumatera Utara</span>
         </div>
-        <div>
-            <b>20+</b>
-            <span>Batch perjalanan pengabdian</span>
+        <div class="gsm-impact-v223__item">
+            <b class="gsm-impact-v223__number">20+</b>
+            <span class="gsm-impact-v223__label">Batch perjalanan pengabdian</span>
         </div>
-        <div>
-            <b><?= (int)$alumniStats['total'] ?></b>
-            <span>Profil alumni yang sudah dipublikasikan</span>
+        <div class="gsm-impact-v223__item">
+            <b class="gsm-impact-v223__number"><?= (int)$alumniStats['total'] ?></b>
+            <span class="gsm-impact-v223__label">Profil alumni yang sudah dipublikasikan</span>
         </div>
     </div>
 </section>

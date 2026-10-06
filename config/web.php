@@ -86,6 +86,8 @@ $config = [
                 'alumni/<slug:[a-z0-9\-]+>' => 'alumni/view',
                 'artikel' => 'article/index',
                 'artikel/<slug:[a-z0-9\-]+>' => 'article/view',
+                'dokumentasi' => 'documentation/index',
+                'dokumentasi/<slug:[a-z0-9\-]+>' => 'documentation/view',
                 'cek-status' => 'site/track',
                 'tracking' => 'site/track',
                 'site/track' => 'site/track',
@@ -105,6 +107,7 @@ $config = [
                 'admin/alumni' => 'admin-alumni/index',
                 'admin/hero' => 'admin-hero/index',
                 'admin/artikel' => 'admin-post/index',
+                'admin/dokumentasi' => 'admin-documentation/index',
             ],
         ],
     ],
@@ -124,8 +127,9 @@ $config = [
             'recruitment/index', 'recruitment/view',
             'alumni/index', 'alumni/view', 'alumni/register',
             'article/index', 'article/view',
+            'documentation/index', 'documentation/view',
             // Controller internal ini mengatur role masing-masing dan memakai login portal yang berbeda.
-            'applicant/*', 'admin-dashboard/*', 'admin-recruitment/*', 'admin-applicant/*', 'admin-alumni/*', 'admin-hero/*', 'admin-post/*',
+            'applicant/*', 'admin-dashboard/*', 'admin-recruitment/*', 'admin-applicant/*', 'admin-alumni/*', 'admin-hero/*', 'admin-post/*', 'admin-documentation/*',
         ],
     ],
 ];

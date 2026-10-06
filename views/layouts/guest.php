@@ -72,6 +72,26 @@ $dashboardUrl = $isStaff ? Url::to(['/admin-dashboard/index']) : Url::to(['/appl
             }
         }
 
+
+        /* PUBLIC NAV V22.4 */
+        .gsm-header .gsm-nav{
+            gap:clamp(14px,1.45vw,24px)!important;
+        }
+        .gsm-header .gsm-nav>a{
+            white-space:nowrap!important;
+        }
+        @media(min-width:981px) and (max-width:1180px){
+            .gsm-header .gsm-nav{
+                gap:12px!important;
+            }
+            .gsm-header .gsm-nav>a{
+                font-size:12px!important;
+            }
+            .gsm-nav .nav-track-highlight{
+                padding:9px 12px!important;
+            }
+        }
+
         /* FOOTER CLEAN V11 — tidak memakai class footer lama */
         .gsm-footer .gsm-footer-v11{
             display:flex!important;
@@ -150,10 +170,67 @@ $dashboardUrl = $isStaff ? Url::to(['/admin-dashboard/index']) : Url::to(['/appl
             padding:0!important;
         }
 
+        /* FOOTER TEXT COLOR FIX V22.6
+           Override warna link global/visited agar footer tidak kembali biru. */
+        .gsm-footer,
+        .gsm-footer p,
+        .gsm-footer b,
+        .gsm-footer strong,
+        .gsm-footer span{
+            color:rgba(255,255,255,.88)!important;
+        }
+
+        .gsm-footer .gsm-footer-v11__column a,
+        .gsm-footer .gsm-footer-v11__column a:link,
+        .gsm-footer .gsm-footer-v11__column a:visited{
+            color:rgba(255,255,255,.82)!important;
+            text-decoration:none!important;
+        }
+
+        .gsm-footer .gsm-footer-v11__column a:hover,
+        .gsm-footer .gsm-footer-v11__column a:focus{
+            color:#ffffff!important;
+            text-decoration:none!important;
+            opacity:1!important;
+        }
+
+        .gsm-footer .gsm-footer-v11__brand p{
+            color:rgba(255,255,255,.82)!important;
+        }
+
+        .gsm-footer .gsm-footer-v11-bottom__credit{
+            color:rgba(255,255,255,.62)!important;
+        }
+
+        .gsm-footer .gsm-footer-v11-bottom__credit strong{
+            color:#ffffff!important;
+        }
+
         .gsm-footer .gsm-footer-v11-bottom{
             margin-top:42px!important;
             padding-top:18px!important;
             border-top:1px solid rgba(255,255,255,.12)!important;
+        }
+
+        .gsm-footer .gsm-footer-v11-bottom__copyright{
+            display:block!important;
+            margin:0!important;
+            color:rgba(255,255,255,.88)!important;
+            font-size:12px!important;
+            line-height:1.55!important;
+        }
+
+        .gsm-footer .gsm-footer-v11-bottom__credit{
+            display:block!important;
+            margin-top:4px!important;
+            color:rgba(255,255,255,.58)!important;
+            font-size:11px!important;
+            line-height:1.55!important;
+        }
+
+        .gsm-footer .gsm-footer-v11-bottom__credit strong{
+            color:rgba(255,255,255,.88)!important;
+            font-weight:800!important;
         }
 
         @media(max-width:900px){
@@ -188,33 +265,10 @@ $dashboardUrl = $isStaff ? Url::to(['/admin-dashboard/index']) : Url::to(['/appl
             }
         }
 
-        .gsm-footer .gsm-footer-v11__brand p{
-            color:rgba(255,255,255,.82) !important;
-        }
-
-        .gsm-footer .gsm-footer-v11__column b{
-            color:#ffffff !important;
-        }
-
-        .gsm-footer .gsm-footer-v11__column a,
-        .gsm-footer .gsm-footer-v11__column span{
-            color:rgba(255,255,255,.82) !important;
-            text-decoration:none !important;
-        }
-
-        .gsm-footer .gsm-footer-v11__column a:hover{
-            color:#ffffff !important;
-            opacity:1 !important;
-        }
-
-        .gsm-footer .gsm-footer-v11-bottom{
-            color:rgba(255,255,255,.55) !important;
-        }
-
     </style>
     <?php $this->head() ?>
 </head>
-<body class="gsm-public">
+<body class="gsm-public" data-public-layout="v22-4">
 <?php $this->beginBody() ?>
 <header class="gsm-header"><div class="container gsm-nav-wrap">
     <a class="gsm-brand gsm-brand-logo" href="<?= Url::to(['/site/index']) ?>" aria-label="Sumut Mengajar">
@@ -223,12 +277,15 @@ $dashboardUrl = $isStaff ? Url::to(['/admin-dashboard/index']) : Url::to(['/appl
     <button class="gsm-nav-toggle" type="button" aria-label="Buka menu">☰</button>
     <nav class="gsm-nav">
         <a href="<?= Url::to(['/site/about']) ?>">Tentang</a>
-        <a href="<?= Url::to(['/site/index','#program']) ?>">Program</a>
-        <a href="<?= Url::to(['/site/index','#pengabdian']) ?>">Pengabdian</a>
+        <a href="<?= Url::to(['/documentation/index']) ?>">Dokumentasi</a>
         <a href="<?= Url::to(['/alumni/index']) ?>">Alumni</a>
         <a href="<?= Url::to(['/article/index']) ?>">Artikel</a>
         <a href="<?= Url::to(['/recruitment/index']) ?>">Rekrutmen</a>
-        <a class="nav-track-highlight" href="<?= Url::to(['/site/track']) ?>"><span class="nav-track-dot"></span>Cek Status Pendaftaran</a>
+        <a class="nav-track-highlight" href="<?= Url::to(['/site/track']) ?>">
+            <span class="nav-track-dot"></span>
+            Cek Status Pendaftaran
+        </a>
+
         <?php if(Yii::$app->user->isGuest): ?>
             <a class="nav-login" href="<?= Url::to(['/site/login']) ?>">Masuk</a>
             <a class="nav-cta" href="<?= Url::to(['/site/register']) ?>">Daftar</a>
@@ -265,7 +322,7 @@ $dashboardUrl = $isStaff ? Url::to(['/admin-dashboard/index']) : Url::to(['/appl
             <a href="<?= Url::to(['/site/track']) ?>">Cek Status Pendaftaran</a>
             <a href="<?= Url::to(['/article/index']) ?>">Artikel</a>
             <a href="<?= Url::to(['/alumni/index']) ?>">Alumni</a>
-            <a href="<?= Url::to(['/site/index','#pengabdian']) ?>">Daerah Pengabdian</a>
+            <a href="<?= Url::to(['/documentation/index']) ?>">Dokumentasi Pengabdian</a>
         </div>
 
         <div class="gsm-footer-v11__column gsm-footer-v11__alumni">
@@ -285,7 +342,12 @@ $dashboardUrl = $isStaff ? Url::to(['/admin-dashboard/index']) : Url::to(['/appl
     </div>
 
     <div class="container footer-bottom gsm-footer-v11-bottom">
-        © <?= date('Y') ?> Gerakan Sumut Mengajar
+        <span class="gsm-footer-v11-bottom__copyright">
+            © <?= date('Y') ?> Gerakan Sumut Mengajar. All rights reserved.
+        </span>
+        <span class="gsm-footer-v11-bottom__credit">
+            Website developed &amp; maintained by <strong>Rama Susi</strong>
+        </span>
     </div>
 </footer>
 

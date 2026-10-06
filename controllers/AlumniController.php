@@ -64,16 +64,47 @@ class AlumniController extends Controller
             ->column();
 
         $stats = [
-            'alumni' => (int)AlumniProfile::publicQuery()->count(),
-            'batches' => count(AlumniProfile::publicQuery()->select('batch_number')->distinct()->column()),
-            'institutions' => count(AlumniProfile::publicQuery()
-                ->andWhere(['not', ['current_institution' => null]])
-                ->andWhere(['<>', 'current_institution', ''])
-                ->select('current_institution')->distinct()->column()),
-            'works' => (int)AlumniPublication::find()
+            'alumni' => (int) AlumniProfile::publicQuery()->count(),
+            'locations' => count(
+                AlumniProfile::publicQuery()
+                    ->andWhere(['not', ['location_name' => null]])
+                    ->andWhere(['<>', 'location_name', ''])
+                    ->select('location_name')
+                    ->distinct()
+                    ->column()
+            ),
+            'batches' => count(
+                AlumniProfile::publicQuery()
+                    ->select('batch_number')
+                    ->distinct()
+                    ->column()
+            ),
+            'sectors' => count(
+                AlumniProfile::publicQuery()
+                    ->andWhere(['not', ['sector' => null]])
+                    ->andWhere(['<>', 'sector', ''])
+                    ->select('sector')
+                    ->distinct()
+                    ->column()
+            ),
+            // Tetap dipertahankan untuk kompatibilitas halaman/detail lama.
+            'institutions' => count(
+                AlumniProfile::publicQuery()
+                    ->andWhere(['not', ['current_institution' => null]])
+                    ->andWhere(['<>', 'current_institution', ''])
+                    ->select('current_institution')
+                    ->distinct()
+                    ->column()
+            ),
+            'works' => (int) AlumniPublication::find()
                 ->alias('p')
                 ->innerJoin('alumni_profile a', 'a.id = p.alumni_id')
-                ->where(['p.is_public' => 1, 'a.is_public' => 1, 'a.consent_public' => 1, 'a.verification_status' => AlumniProfile::STATUS_VERIFIED])
+                ->where([
+                    'p.is_public' => 1,
+                    'a.is_public' => 1,
+                    'a.consent_public' => 1,
+                    'a.verification_status' => AlumniProfile::STATUS_VERIFIED,
+                ])
                 ->count(),
         ];
 
