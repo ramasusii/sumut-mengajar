@@ -28,6 +28,23 @@ $fieldLimits = static function ($field) {
     $max = $field->field_type === 'multi_file' ? max($min, (int)($config['max_files'] ?? 5)) : 1;
     return [$min, $max];
 };
+
+$renderHelpText = static function ($text) {
+    $encoded = Html::encode((string)$text);
+
+    return preg_replace_callback(
+        '~https?://[^\s<]+~i',
+        static function ($match) {
+            $url = $match[0];
+            return Html::a($url, $url, [
+                'target' => '_blank',
+                'rel' => 'noopener noreferrer',
+                'class' => 'application-inline-link',
+            ]);
+        },
+        $encoded
+    );
+};
 ?>
 
 <div class="application-form-page launch-form-v3">
@@ -128,7 +145,7 @@ $fieldLimits = static function ($field) {
                         <div>
                             <h3><?= Html::encode($field->label) ?> <?= (int)$field->is_required?'<span style="color:#e06e43">*</span>':'' ?></h3>
                             <?php if ($field->help_text && !preg_match('/\\b(?:KB|MB|GB)\\b/i', (string)$field->help_text)): ?>
-                                <p><?= Html::encode($field->help_text) ?></p>
+                                <p><?= $renderHelpText($field->help_text) ?></p>
                             <?php endif; ?>
                             <p class="application-file-limit"><b>JPG, PNG, atau PDF • maksimal <?= Html::encode($maxUploadLabel) ?> per file.</b></p>
                             <?php if ($field->field_type==='multi_file'): ?><p><b>Minimal <?= $minFiles ?> file, maksimal <?= $maxFiles ?> file.</b></p><?php endif; ?>
@@ -257,6 +274,18 @@ $this->registerCss(<<<'CSS'
     font-size:14px;
     line-height:1;
     font-weight:900;
+}
+
+.launch-form-v3 .application-inline-link{
+    color:#0f7a46 !important;
+    font-weight:800;
+    text-decoration:underline;
+    text-underline-offset:3px;
+    word-break:break-all;
+}
+.launch-form-v3 .application-inline-link:hover,
+.launch-form-v3 .application-inline-link:focus{
+    color:#095c34 !important;
 }
 .launch-form-v3 .application-form-option:has(input:checked){
     border-color:#99c8aa;
