@@ -13,8 +13,7 @@ $form=ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data']]);
     <label>Foto Profil</label>
     <input class="form-control" type="file" name="photo_upload" accept="image/jpeg,image/png">
     <small class="help-block">
-        Pas foto resmi 3:4 · minimal 354 × 472 px · JPG/PNG · maksimal 200 KB.
-        Sistem menyimpan foto seragam 354 × 472 px.
+        Unggah pas foto resmi rasio 3:4 dengan wajah terlihat jelas. Maksimal 200 KB.
     </small>
     <?php if($model->photo): ?><small><?= Html::encode($model->photo) ?></small><?php endif; ?>
 </div>
