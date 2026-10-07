@@ -15,6 +15,55 @@ $publicCareers = array_values(array_filter(
 ));
 
 $publications = $model->publications;
+
+$instagramUrl = null;
+$instagramLabel = null;
+
+if ($model->instagram) {
+    $rawInstagram = trim((string)$model->instagram);
+
+    if (preg_match('~^https?://~i', $rawInstagram)) {
+        $host = strtolower((string)parse_url($rawInstagram, PHP_URL_HOST));
+        $host = preg_replace('/^www\./', '', $host);
+
+        if ($host === 'instagram.com') {
+            $path = trim((string)parse_url($rawInstagram, PHP_URL_PATH), '/');
+            $segments = array_values(array_filter(explode('/', $path)));
+            $username = $segments[0] ?? '';
+
+            if ($username !== '') {
+                $instagramUrl = 'https://www.instagram.com/' . rawurlencode($username) . '/';
+                $instagramLabel = '@' . $username;
+            }
+        }
+    } else {
+        $username = ltrim($rawInstagram, '@');
+
+        if (preg_match('/^[A-Za-z0-9._]{1,30}$/', $username)) {
+            $instagramUrl = 'https://www.instagram.com/' . rawurlencode($username) . '/';
+            $instagramLabel = '@' . $username;
+        }
+    }
+}
+
+$linkedinUrl = null;
+if ($model->linkedin) {
+    $rawLinkedin = trim((string)$model->linkedin);
+
+    if (!preg_match('~^https?://~i', $rawLinkedin)) {
+        $rawLinkedin = 'https://' . ltrim($rawLinkedin, '/');
+    }
+
+    $linkedinHost = strtolower((string)parse_url($rawLinkedin, PHP_URL_HOST));
+    $linkedinHost = preg_replace('/^www\./', '', $linkedinHost);
+
+    if (
+        filter_var($rawLinkedin, FILTER_VALIDATE_URL)
+        && ($linkedinHost === 'linkedin.com' || str_ends_with($linkedinHost, '.linkedin.com'))
+    ) {
+        $linkedinUrl = $rawLinkedin;
+    }
+}
 ?>
 
 <div class="gsm-alumni-detail-v26">
@@ -241,27 +290,40 @@ $publications = $model->publications;
                         </dl>
                     </div>
 
-                    <?php if ($model->linkedin || $model->instagram): ?>
+                    <?php if ($linkedinUrl || $instagramUrl): ?>
                         <div class="gsm-alumni-detail-v26__side-card">
                             <span class="gsm-alumni-detail-v26__side-kicker">JEJARING</span>
                             <h3>Terhubung</h3>
 
                             <div class="gsm-alumni-detail-v26__socials">
-                                <?php if ($model->linkedin): ?>
+                                <?php if ($linkedinUrl): ?>
                                     <a
-                                        href="<?= Html::encode($model->linkedin) ?>"
+                                        href="<?= Html::encode($linkedinUrl) ?>"
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        aria-label="Buka profil LinkedIn <?= Html::encode($model->nama_lengkap) ?>"
                                     >
-                                        LinkedIn <span aria-hidden="true">↗</span>
+                                        <span>
+                                            <small>LinkedIn</small>
+                                            <strong>Lihat profil</strong>
+                                        </span>
+                                        <b aria-hidden="true">↗</b>
                                     </a>
                                 <?php endif; ?>
 
-                                <?php if ($model->instagram): ?>
-                                    <div>
-                                        <small>Instagram</small>
-                                        <strong><?= Html::encode($model->instagram) ?></strong>
-                                    </div>
+                                <?php if ($instagramUrl): ?>
+                                    <a
+                                        href="<?= Html::encode($instagramUrl) ?>"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label="Buka profil Instagram <?= Html::encode($model->nama_lengkap) ?>"
+                                    >
+                                        <span>
+                                            <small>Instagram</small>
+                                            <strong><?= Html::encode($instagramLabel ?: 'Lihat profil') ?></strong>
+                                        </span>
+                                        <b aria-hidden="true">↗</b>
+                                    </a>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -736,27 +798,30 @@ $this->registerCss(<<<'CSS'
     gap:10px;
 }
 
-.gsm-alumni-detail-v26__socials>a,
-.gsm-alumni-detail-v26__socials>div{
+.gsm-alumni-detail-v26__socials>a{
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:10px;
     padding:11px 12px;
+    border:1px solid transparent;
     border-radius:11px;
     background:var(--gsm-soft);
-    color:#3c5044;
-    font-size:10px;
-    font-weight:850;
+    color:#3c5044!important;
     text-decoration:none!important;
+    transition:.18s ease;
 }
 
-.gsm-alumni-detail-v26__socials>a{
-    color:var(--gsm-green)!important;
+.gsm-alumni-detail-v26__socials>a:hover,
+.gsm-alumni-detail-v26__socials>a:focus{
+    border-color:#cfe2d5;
+    background:#eef7f1;
+    transform:translateY(-1px);
 }
 
-.gsm-alumni-detail-v26__socials>div{
-    display:block;
+.gsm-alumni-detail-v26__socials>a>b{
+    color:var(--gsm-green);
+    font-size:13px;
 }
 
 .gsm-alumni-detail-v26__socials small{
@@ -772,6 +837,7 @@ $this->registerCss(<<<'CSS'
     overflow-wrap:anywhere;
     color:#3c5044;
     font-size:10px;
+    font-weight:850;
 }
 
 /* Responsive */

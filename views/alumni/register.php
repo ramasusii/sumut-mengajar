@@ -39,7 +39,207 @@ $this->title='Pendaftaran Alumni';
     Maksimal <b>200 KB</b>.
 </p>
 <p class="alumni-photo-status-v241" id="alumni-photo-status-v241"></p>
-</div></div><hr><h2>Karier Saat Ini</h2><div class="alumni-form-grid"><?= $form->field($model,'current_position')->textInput(['placeholder'=>'Contoh: Software Engineer'])->label('Jabatan') ?><?= $form->field($model,'current_institution')->textInput(['placeholder'=>'Instansi / Perusahaan'])->label('Instansi / Perusahaan') ?><?= $form->field($model,'sector')->textInput(['placeholder'=>'Pendidikan, Pemerintahan, Teknologi, dll.'])->label('Sektor') ?><?= $form->field($model,'work_city')->textInput(['placeholder'=>'Kota tempat bekerja'])->label('Kota Bekerja') ?><?= $form->field($model,'instagram')->textInput(['placeholder'=>'@username']) ?><?= $form->field($model,'linkedin')->textInput(['placeholder'=>'https://linkedin.com/in/...']) ?></div><?= $form->field($model,'bio')->textarea(['rows'=>5,'placeholder'=>'Ceritakan singkat perjalanan setelah Sumut Mengajar, dampak pengabdian, atau aktivitas saat ini.'])->label('Cerita Singkat') ?><hr><h2>Karya / Skripsi / Penelitian</h2><p class="alumni-form-note">Isi jika ada. Karya lain dapat ditambahkan oleh tim setelah verifikasi.</p><div class="alumni-form-grid"><?= $form->field($model,'publication_title')->textInput(['placeholder'=>'Judul karya / skripsi / penelitian'])->label('Judul Karya') ?><?= $form->field($model,'publication_type')->dropDownList(AlumniPublication::TYPES,['prompt'=>'Pilih jenis'])->label('Jenis Karya') ?><?= $form->field($model,'publication_year')->input('number')->label('Tahun') ?><?= $form->field($model,'publication_url')->textInput(['placeholder'=>'Tautan repository / publikasi'])->label('Tautan') ?></div><?= $form->field($model,'publication_about_service')->checkbox()->label('Karya ini membahas pengalaman atau pengabdian Sumut Mengajar') ?><hr><?= $form->field($model,'consent_public')->checkbox()->label('Saya setuju data profil, riwayat pengabdian, karier, dan karya yang saya isi dapat ditampilkan pada halaman Alumni Sumut Mengajar setelah diverifikasi. Nomor WhatsApp tidak akan ditampilkan ke publik.') ?><button class="btn-primary-gsm" type="submit">Kirim Data Alumni →</button><?php ActiveForm::end(); ?></div>
+</div></div>
+
+<hr>
+
+<h2>Karier Saat Ini</h2>
+<div class="alumni-form-grid">
+    <?= $form->field($model,'current_position')
+        ->textInput(['placeholder'=>'Contoh: Software Engineer'])
+        ->label('Jabatan') ?>
+
+    <?= $form->field($model,'current_institution')
+        ->textInput(['placeholder'=>'Instansi / Perusahaan'])
+        ->label('Instansi / Perusahaan') ?>
+
+    <?= $form->field($model,'sector')
+        ->textInput(['placeholder'=>'Pendidikan, Pemerintahan, Teknologi, dll.'])
+        ->label('Sektor') ?>
+
+    <?= $form->field($model,'work_city')
+        ->textInput(['placeholder'=>'Kota tempat bekerja'])
+        ->label('Kota Bekerja') ?>
+
+    <div>
+        <?= $form->field($model,'instagram')
+            ->textInput([
+                'placeholder'=>'@username atau instagram.com/username',
+                'autocomplete'=>'url'
+            ])
+            ->label('Instagram') ?>
+        <p class="alumni-field-hint-v27">Boleh isi @username atau link profil Instagram.</p>
+    </div>
+
+    <div>
+        <?= $form->field($model,'linkedin')
+            ->textInput([
+                'placeholder'=>'linkedin.com/in/username',
+                'autocomplete'=>'url'
+            ])
+            ->label('LinkedIn') ?>
+        <p class="alumni-field-hint-v27">Gunakan tautan profil LinkedIn.</p>
+    </div>
+</div>
+
+<?= $form->field($model,'bio')
+    ->textarea([
+        'rows'=>5,
+        'maxlength'=>1500,
+        'placeholder'=>'Ceritakan singkat perjalanan setelah Sumut Mengajar, dampak pengabdian, atau aktivitas saat ini.'
+    ])
+    ->label('Cerita Singkat') ?>
+
+<hr>
+
+<div class="alumni-publication-head-v27">
+    <div>
+        <h2>Karya / Skripsi / Penelitian</h2>
+        <p class="alumni-form-note">
+            Opsional. Tambahkan lebih dari satu jika memiliki beberapa karya.
+        </p>
+    </div>
+
+    <button type="button" class="alumni-add-publication-v27" id="alumni-add-publication-v27">
+        + Tambah Karya
+    </button>
+</div>
+
+<?php
+$publicationRows = is_array($model->publications) && $model->publications
+    ? array_values($model->publications)
+    : [[]];
+?>
+
+<div class="alumni-publications-error-v27">
+    <?= Html::error($model, 'publications') ?>
+</div>
+
+<div id="alumni-publications-v27">
+    <?php foreach ($publicationRows as $index => $publication): ?>
+        <div class="alumni-publication-row-v27" data-index="<?= (int)$index ?>">
+            <div class="alumni-publication-row-v27__head">
+                <div>
+                    <span class="alumni-publication-number-v27">KARYA <?= (int)$index + 1 ?></span>
+                    <h3>Detail karya</h3>
+                </div>
+
+                <button
+                    type="button"
+                    class="alumni-remove-publication-v27"
+                    <?= $index === 0 ? 'hidden' : '' ?>
+                >
+                    Hapus
+                </button>
+            </div>
+
+            <div class="alumni-form-grid">
+                <div class="form-group">
+                    <label>Judul Karya</label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        maxlength="255"
+                        name="AlumniRegistrationForm[publications][<?= (int)$index ?>][title]"
+                        value="<?= Html::encode($publication['title'] ?? '') ?>"
+                        placeholder="Judul karya / skripsi / penelitian"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Jenis Karya</label>
+                    <select
+                        class="form-control"
+                        name="AlumniRegistrationForm[publications][<?= (int)$index ?>][publication_type]"
+                    >
+                        <option value="">Pilih jenis</option>
+                        <?php foreach (AlumniPublication::TYPES as $value => $label): ?>
+                            <option
+                                value="<?= Html::encode($value) ?>"
+                                <?= (($publication['publication_type'] ?? '') === $value) ? 'selected' : '' ?>
+                            >
+                                <?= Html::encode($label) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tahun</label>
+                    <input
+                        class="form-control"
+                        type="number"
+                        min="1900"
+                        max="<?= (int)date('Y') ?>"
+                        name="AlumniRegistrationForm[publications][<?= (int)$index ?>][publication_year]"
+                        value="<?= Html::encode($publication['publication_year'] ?? '') ?>"
+                        placeholder="<?= (int)date('Y') ?>"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Tautan</label>
+                    <input
+                        class="form-control"
+                        type="url"
+                        name="AlumniRegistrationForm[publications][<?= (int)$index ?>][url]"
+                        value="<?= Html::encode($publication['url'] ?? '') ?>"
+                        placeholder="repository / jurnal / publikasi"
+                    >
+                </div>
+
+                <div class="form-group alumni-publication-full-v27">
+                    <label>Institusi / Penerbit <span>Opsional</span></label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        maxlength="255"
+                        name="AlumniRegistrationForm[publications][<?= (int)$index ?>][institution_or_publisher]"
+                        value="<?= Html::encode($publication['institution_or_publisher'] ?? '') ?>"
+                        placeholder="Nama kampus, jurnal, penerbit, atau institusi"
+                    >
+                </div>
+
+                <div class="form-group alumni-publication-full-v27">
+                    <label>Ringkasan Singkat <span>Opsional</span></label>
+                    <textarea
+                        class="form-control"
+                        rows="3"
+                        maxlength="1500"
+                        name="AlumniRegistrationForm[publications][<?= (int)$index ?>][summary]"
+                        placeholder="Ringkasan singkat karya atau penelitian"
+                    ><?= Html::encode($publication['summary'] ?? '') ?></textarea>
+                </div>
+            </div>
+
+            <label class="alumni-check-v27">
+                <input
+                    type="checkbox"
+                    name="AlumniRegistrationForm[publications][<?= (int)$index ?>][is_about_service]"
+                    value="1"
+                    <?= !empty($publication['is_about_service']) ? 'checked' : '' ?>
+                >
+                <span>Karya ini membahas pengalaman atau pengabdian Sumut Mengajar</span>
+            </label>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<p class="alumni-publication-limit-v27">
+    Maksimal 10 karya dalam satu pendaftaran.
+</p>
+
+<hr>
+
+<?= $form->field($model,'consent_public')
+    ->checkbox([
+        'label'=>'Saya setuju data profil, riwayat pengabdian, karier, dan karya yang saya isi dapat ditampilkan pada halaman Alumni Sumut Mengajar setelah diverifikasi. Nomor WhatsApp tidak akan ditampilkan ke publik.'
+    ])
+    ->label(false) ?>
+
+<button class="btn-primary-gsm" type="submit">Kirim Data Alumni →</button>
+
+<?php ActiveForm::end(); ?></div>
 </div></section>
 
 
@@ -361,6 +561,140 @@ body.alumni-crop-open-v241{
         width:min(260px,74vw);
     }
 }
+
+/* =========================================================
+   Alumni Registration V27
+   ========================================================= */
+.alumni-field-hint-v27{
+    margin:-8px 0 0;
+    color:#7a877f;
+    font-size:10px;
+    line-height:1.5;
+}
+.alumni-publication-head-v27{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:16px;
+}
+.alumni-publication-head-v27 h2{
+    margin-bottom:5px!important;
+}
+.alumni-add-publication-v27{
+    flex:0 0 auto;
+    min-height:40px;
+    padding:0 14px;
+    border:1px solid #bfd6c6;
+    border-radius:10px;
+    background:#f4faf6;
+    color:#0e623a;
+    font-size:11px;
+    font-weight:850;
+    cursor:pointer;
+    transition:.18s ease;
+}
+.alumni-add-publication-v27:hover{
+    border-color:#16824a;
+    background:#eaf6ee;
+}
+.alumni-add-publication-v27:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+.alumni-publications-error-v27 .help-block,
+.alumni-publications-error-v27{
+    color:#b23c32;
+    font-size:11px;
+    font-weight:750;
+}
+#alumni-publications-v27{
+    display:grid;
+    gap:14px;
+}
+.alumni-publication-row-v27{
+    padding:18px;
+    border:1px solid #dfe8e2;
+    border-radius:16px;
+    background:#fbfdfb;
+}
+.alumni-publication-row-v27__head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:15px;
+}
+.alumni-publication-number-v27{
+    display:block;
+    margin-bottom:3px;
+    color:#16824a;
+    font-size:8px;
+    font-weight:900;
+    letter-spacing:.8px;
+}
+.alumni-publication-row-v27__head h3{
+    margin:0;
+    color:#26382d;
+    font-size:15px;
+    font-weight:850;
+}
+.alumni-remove-publication-v27{
+    padding:6px 10px;
+    border:0;
+    border-radius:8px;
+    background:#fff0ee;
+    color:#a33c31;
+    font-size:9px;
+    font-weight:850;
+    cursor:pointer;
+}
+.alumni-remove-publication-v27[hidden]{
+    display:none!important;
+}
+.alumni-publication-full-v27{
+    grid-column:1/-1;
+}
+.alumni-publication-full-v27 label span{
+    color:#8b968f;
+    font-size:9px;
+    font-weight:600;
+}
+.alumni-check-v27{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    margin:4px 0 0;
+    color:#37493e;
+    font-size:11px;
+    font-weight:750;
+    line-height:1.5;
+    cursor:pointer;
+}
+.alumni-check-v27 input{
+    width:16px;
+    height:16px;
+    flex:0 0 16px;
+    margin:1px 0 0;
+    accent-color:#0e623a;
+}
+.alumni-publication-limit-v27{
+    margin:10px 0 0;
+    color:#88958d;
+    font-size:9px;
+}
+@media(max-width:700px){
+    .alumni-publication-head-v27{
+        display:block;
+    }
+    .alumni-add-publication-v27{
+        margin-top:10px;
+    }
+    .alumni-publication-row-v27{
+        padding:14px;
+    }
+}
+
 CSS);
 
 $this->registerJs(<<<'JS'
@@ -665,5 +999,163 @@ $this->registerJs(<<<'JS'
         }
     });
 })();
+
+/* Alumni publications repeater V27 */
+(function(){
+    const list=document.getElementById('alumni-publications-v27');
+    const addButton=document.getElementById('alumni-add-publication-v27');
+
+    if(!list || !addButton) return;
+
+    const MAX_ROWS=10;
+    const TYPES={
+        article:'Artikel',
+        book:'Buku',
+        journal:'Jurnal',
+        thesis:'Skripsi',
+        master_thesis:'Tesis',
+        research:'Penelitian',
+        report:'Laporan Pengabdian',
+        essay:'Esai',
+        other:'Karya Lainnya'
+    };
+
+    function escapeHtml(value){
+        return String(value)
+            .replaceAll('&','&amp;')
+            .replaceAll('<','&lt;')
+            .replaceAll('>','&gt;')
+            .replaceAll('"','&quot;')
+            .replaceAll("'","&#039;");
+    }
+
+    function rowTemplate(index){
+        const options=Object.entries(TYPES)
+            .map(([value,label])=>'<option value="'+escapeHtml(value)+'">'+escapeHtml(label)+'</option>')
+            .join('');
+
+        return `
+        <div class="alumni-publication-row-v27" data-index="${index}">
+            <div class="alumni-publication-row-v27__head">
+                <div>
+                    <span class="alumni-publication-number-v27">KARYA ${index+1}</span>
+                    <h3>Detail karya</h3>
+                </div>
+                <button type="button" class="alumni-remove-publication-v27">Hapus</button>
+            </div>
+
+            <div class="alumni-form-grid">
+                <div class="form-group">
+                    <label>Judul Karya</label>
+                    <input class="form-control" type="text" maxlength="255"
+                        name="AlumniRegistrationForm[publications][${index}][title]"
+                        placeholder="Judul karya / skripsi / penelitian">
+                </div>
+
+                <div class="form-group">
+                    <label>Jenis Karya</label>
+                    <select class="form-control"
+                        name="AlumniRegistrationForm[publications][${index}][publication_type]">
+                        <option value="">Pilih jenis</option>
+                        ${options}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tahun</label>
+                    <input class="form-control" type="number" min="1900" max="${new Date().getFullYear()}"
+                        name="AlumniRegistrationForm[publications][${index}][publication_year]"
+                        placeholder="${new Date().getFullYear()}">
+                </div>
+
+                <div class="form-group">
+                    <label>Tautan</label>
+                    <input class="form-control" type="url"
+                        name="AlumniRegistrationForm[publications][${index}][url]"
+                        placeholder="repository / jurnal / publikasi">
+                </div>
+
+                <div class="form-group alumni-publication-full-v27">
+                    <label>Institusi / Penerbit <span>Opsional</span></label>
+                    <input class="form-control" type="text" maxlength="255"
+                        name="AlumniRegistrationForm[publications][${index}][institution_or_publisher]"
+                        placeholder="Nama kampus, jurnal, penerbit, atau institusi">
+                </div>
+
+                <div class="form-group alumni-publication-full-v27">
+                    <label>Ringkasan Singkat <span>Opsional</span></label>
+                    <textarea class="form-control" rows="3" maxlength="1500"
+                        name="AlumniRegistrationForm[publications][${index}][summary]"
+                        placeholder="Ringkasan singkat karya atau penelitian"></textarea>
+                </div>
+            </div>
+
+            <label class="alumni-check-v27">
+                <input type="checkbox"
+                    name="AlumniRegistrationForm[publications][${index}][is_about_service]"
+                    value="1">
+                <span>Karya ini membahas pengalaman atau pengabdian Sumut Mengajar</span>
+            </label>
+        </div>`;
+    }
+
+    function refreshRows(){
+        const rows=[...list.querySelectorAll('.alumni-publication-row-v27')];
+
+        rows.forEach((row,index)=>{
+            row.dataset.index=index;
+
+            const number=row.querySelector('.alumni-publication-number-v27');
+            if(number) number.textContent='KARYA '+(index+1);
+
+            row.querySelectorAll('[name]').forEach(input=>{
+                input.name=input.name.replace(
+                    /AlumniRegistrationForm\[publications\]\[\d+\]/,
+                    'AlumniRegistrationForm[publications]['+index+']'
+                );
+            });
+
+            const remove=row.querySelector('.alumni-remove-publication-v27');
+            if(remove){
+                remove.hidden=rows.length===1;
+            }
+        });
+
+        addButton.disabled=rows.length>=MAX_ROWS;
+        addButton.textContent=rows.length>=MAX_ROWS
+            ? 'Maksimal 10 Karya'
+            : '+ Tambah Karya';
+    }
+
+    addButton.addEventListener('click',function(){
+        const rows=list.querySelectorAll('.alumni-publication-row-v27');
+        if(rows.length>=MAX_ROWS) return;
+
+        list.insertAdjacentHTML('beforeend',rowTemplate(rows.length));
+        refreshRows();
+
+        const newest=list.lastElementChild;
+        if(newest){
+            newest.scrollIntoView({behavior:'smooth',block:'center'});
+            const title=newest.querySelector('input[type="text"]');
+            if(title) setTimeout(()=>title.focus(),250);
+        }
+    });
+
+    list.addEventListener('click',function(event){
+        const button=event.target.closest('.alumni-remove-publication-v27');
+        if(!button) return;
+
+        const rows=list.querySelectorAll('.alumni-publication-row-v27');
+        if(rows.length<=1) return;
+
+        const row=button.closest('.alumni-publication-row-v27');
+        if(row) row.remove();
+        refreshRows();
+    });
+
+    refreshRows();
+})();
+
 JS);
 ?>
